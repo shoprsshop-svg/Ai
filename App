@@ -1,0 +1,178 @@
+
+/* AI STUDIO - Aplicativo pessoal de fotos e vídeos */
+(() => {
+  "use strict";
+
+  const style = document.createElement("style");
+  style.textContent = `
+    *{box-sizing:border-box}
+    body{margin:0;background:#101018;color:#fff;font-family:Arial,sans-serif}
+    .studio{max-width:650px;margin:auto;padding:22px}
+    .header{text-align:center;padding:20px 0}
+    .header h1{font-size:30px;color:#a78bfa;margin:5px}
+    .header p{color:#aaa}
+    .panel{background:#1d1d29;border:1px solid #343447;border-radius:16px;padding:18px;margin:16px 0}
+    .panel h2{font-size:18px}
+    input,textarea,button{width:100%;padding:14px;border-radius:10px;font-size:15px;margin:8px 0}
+    input,textarea{background:#11111b;color:white;border:1px solid #444}
+    textarea{min-height:110px;resize:vertical}
+    button{background:#8055e8;color:white;border:0;font-weight:bold;cursor:pointer}
+    button:disabled{opacity:.5}
+    .secondary{background:#343447}
+    .preview{width:100%;max-height:350px;object-fit:contain;border-radius:12px;display:none;margin-top:12px}
+    .notice{font-size:13px;color:#aaa;line-height:1.5}
+    .item{background:#29293a;padding:12px;border-radius:10px;margin:10px 0}
+    .item img{width:100%;max-height:220px;object-fit:contain}
+    .item button{margin-top:8px}
+    #status{color:#c4b5fd;white-space:pre-wrap}
+  `;
+  document.head.appendChild(style);
+
+  document.body.innerHTML = `
+    <main class="studio">
+      <header class="header">
+        <h1>✨ AI STUDIO</h1>
+        <p>Seu estúdio pessoal de criação com inteligência artificial</p>
+      </header>
+
+      <section class="panel">
+        <h2>🔞 Acesso adulto</h2>
+        <p class="notice">Aplicativo destinado a maiores de 18 anos.
+        Utilize somente fotos próprias ou de adultos que autorizaram
+        expressamente o uso de sua imagem.</p>
+      </section>
+
+      <section class="panel">
+        <h2>📸 1. Escolher uma foto</h2>
+        <input id="photo" type="file" accept="image/*">
+        <img id="preview" class="preview">
+      </section>
+
+      <section class="panel">
+        <h2>✍️ 2. Descrever o vídeo</h2>
+        <textarea id="prompt" placeholder="Descreva os movimentos, expressões, cenário e estilo do vídeo..."></textarea>
+        <button id="prepare">Preparar meu vídeo</button>
+        <p id="status"></p>
+        <p class="notice">A preparação funciona localmente. A geração real de vídeo ainda precisa de conexão com um serviço de IA.</p>
+      </section>
+
+      <section class="panel">
+        <h2>🎬 3. Meus projetos</h2>
+        <div id="gallery"></div>
+      </section>
+
+      <p class="notice">AI Studio • Projetos armazenados neste dispositivo.</p>
+    </main>
+  `;
+
+  let selectedPhoto = null;
+
+  const photo = document.getElementById("photo");
+  const preview = document.getElementById("preview");
+  const prompt = document.getElementById("prompt");
+  const status = document.getElementById("status");
+  const gallery = document.getElementById("gallery");
+
+  photo.addEventListener("change", () => {
+    const file = photo.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      status.textContent = "Escolha uma imagem válida.";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      selectedPhoto = reader.result;
+      preview.src = selectedPhoto;
+      preview.style.display = "block";
+      status.textContent = "Foto carregada com sucesso!";
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+  function getProjects() {
+    try {
+      return JSON.parse(localStorage.getItem("aiStudioProjects") || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function showProjects() {
+    const projects = getProjects();
+    gallery.innerHTML = "";
+
+    if (!projects.length) {
+      gallery.textContent = "Seus projetos aparecerão aqui.";
+      return;
+    }
+
+    projects.forEach((project, index) => {
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const img = document.createElement("img");
+      img.src = project.photo;
+      img.alt = "Foto do projeto";
+
+      const description = document.createElement("p");
+      description.textContent = project.prompt;
+
+      const date = document.createElement("p");
+      date.className = "notice";
+      date.textContent = project.date;
+
+      const remove = document.createElement("button");
+      remove.className = "secondary";
+      remove.textContent = "Excluir projeto";
+
+      remove.onclick = () => {
+        const updated = getProjects();
+        updated.splice(index, 1);
+        localStorage.setItem("aiStudioProjects", JSON.stringify(updated));
+        showProjects();
+      };
+
+      item.append(img, description, date, remove);
+      gallery.appendChild(item);
+    });
+  }
+
+  document.getElementById("prepare").addEventListener("click", () => {
+    const description = prompt.value.trim();
+
+    if (!selectedPhoto) {
+      status.textContent = "Primeiro escolha uma foto.";
+      return;
+    }
+
+    if (!description) {
+      status.textContent = "Escreva como deseja o vídeo.";
+      return;
+    }
+
+    const projects = getProjects();
+
+    projects.unshift({
+      photo: selectedPhoto,
+      prompt: description,
+      date: new Date().toLocaleString("pt-BR")
+    });
+
+    try {
+      localStorage.setItem("aiStudioProjects", JSON.stringify(projects));
+      status.textContent =
+        "Projeto preparado e salvo! A conexão com o gerador de vídeo ainda precisa ser configurada.";
+      showProjects();
+    } catch {
+      status.textContent =
+        "Armazenamento cheio. Remova projetos antigos e tente novamente.";
+    }
+  });
+
+  showProjects();
+})();

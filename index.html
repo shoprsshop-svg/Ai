@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101018">
+  <meta name="description" content="AI Studio — estúdio pessoal de criação com IA para adultos.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <title>AI Studio</title>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brandmark">AI</span><div><strong>AI STUDIO</strong><small>CREATIVE LAB · 18+</small></div></div>
+    <span class="private">● PRIVADO</span>
+  </header>
+
+  <main>
+    <section id="ageGate" class="panel age-gate">
+      <div class="age-symbol">18+</div>
+      <h1>Bem-vindo ao AI Studio</h1>
+      <p>Um espaço pessoal para criação de imagens e vídeos com inteligência artificial.</p>
+      <p class="muted">Ao continuar, você confirma que tem 18 anos ou mais e que usará apenas imagens próprias ou de adultos que autorizaram expressamente o uso.</p>
+      <label class="checkline"><input type="checkbox" id="adultConfirm"> Tenho 18 anos ou mais e concordo com o uso responsável.</label>
+      <button id="enterBtn" class="primary" disabled>Entrar no estúdio</button>
+    </section>
+
+    <div id="studio" hidden>
+      <section class="hero">
+        <div><span class="eyebrow">SEU ESPAÇO CRIATIVO</span><h1>Crie. Anime. Experimente.</h1><p>Imagens e vídeos com IA, em um só lugar.</p></div>
+        <div class="hero-orb">✦</div>
+      </section>
+
+      <nav class="tabs" aria-label="Seções">
+        <button class="tab active" data-tab="image">Imagem</button>
+        <button class="tab" data-tab="video">Foto → vídeo</button>
+        <button class="tab" data-tab="gallery">Galeria</button>
+      </nav>
+
+      <section id="imagePanel" class="panel tab-panel">
+        <div class="section-head"><div><span class="eyebrow">01 / CRIAÇÃO</span><h2>Gerador de imagens</h2></div><span class="tag">IA</span></div>
+        <label class="field-label" for="prompt">Descreva a imagem</label>
+        <textarea id="prompt" rows="4" placeholder="Ex.: retrato cinematográfico de uma personagem adulta fictícia, iluminação suave, fotografia editorial..."></textarea>
+        <div class="two-col">
+          <div><label class="field-label" for="style">Estilo</label><select id="style"><option>Fotorealista</option><option>Cinematográfico</option><option>Editorial</option><option>Anime adulto</option><option>Fantasia</option></select></div>
+          <div><label class="field-label" for="ratio">Formato</label><select id="ratio"><option>9:16 · vertical</option><option>1:1 · quadrado</option><option>16:9 · paisagem</option></select></div>
+        </div>
+        <label class="field-label" for="imageFile">Imagem de referência (opcional)</label>
+        <input id="imageFile" type="file" accept="image/*">
+        <div id="imagePreview" class="preview empty">Sua imagem de referência aparecerá aqui.</div>
+        <button id="generateImage" class="primary">Preparar geração</button>
+        <p class="notice">A interface está pronta. Para gerar imagens de verdade, será necessário conectar um serviço de IA e configurar sua chave de acesso. Não coloque chaves secretas diretamente neste aplicativo.</p>
+      </section>
+
+      <section id="videoPanel" class="panel tab-panel" hidden>
+        <div class="section-head"><div><span class="eyebrow">02 / ANIMAÇÃO</span><h2>Transformar foto em vídeo</h2></div><span class="tag">IA</span></div>
+        <label class="field-label" for="videoSource">Escolha uma foto</label>
+        <input id="videoSource" type="file" accept="image/*">
+        <div id="videoPreview" class="preview empty">A foto selecionada aparecerá aqui.</div>
+        <label class="field-label" for="motion">Movimento desejado</label>
+        <textarea id="motion" rows="3" placeholder="Ex.: movimento suave de câmera, cabelo ao vento, sorriso natural..."></textarea>
+        <div class="two-col">
+          <div><label class="field-label" for="duration">Duração desejada</label><select id="duration"><option>4 segundos</option><option>5 segundos</option><option>8 segundos</option></select></div>
+          <div><label class="field-label" for="quality">Qualidade</label><select id="quality"><option>Rascunho</option><option>Alta</option></select></div>
+        </div>
+        <button id="generateVideo" class="primary">Preparar vídeo</button>
+        <p class="notice">A conversão real depende de um provedor de foto-para-vídeo. Os serviços gratuitos costumam ter limites, fila ou marca-d'água; não existe geração ilimitada gratuita garantida.</p>
+      </section>
+
+      <section id="galleryPanel" class="panel tab-panel" hidden>
+        <div class="section-head"><div><span class="eyebrow">03 / ARQUIVOS</span><h2>Sua galeria</h2></div><span class="tag">LOCAL</span></div>
+        <p class="muted">Os arquivos adicionados aqui ficam armazenados neste navegador e neste aparelho. Limpar os dados do navegador pode apagá-los.</p>
+        <div id="gallery" class="gallery-grid"><div class="preview empty">Sua galeria está vazia.</div></div>
+      </section>
+
+      <section class="safety panel">
+        <h3>Uso responsável</h3>
+        <p>Use somente imagens suas ou de adultos que deram autorização clara. Não crie conteúdo íntimo falso, não publique material privado sem consentimento e nunca use imagens de menores em contextos sexuais.</p>
+      </section>
+    </div>
+  </main>
+  <footer>AI STUDIO · VERSÃO INICIAL · 18+</footer>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
